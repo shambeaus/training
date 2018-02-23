@@ -32,19 +32,24 @@ License Information for 'c880-data'
 
 Configuration register is 0x2102'''
 
+import pprint
 
 versionlist = version.splitlines()
 
-finaldata = []
+finaldata = {}
 
 for i in versionlist:
 	if 'Cisco IOS Software' in i:
-		finaldata.append(i)
+		ossplit = i.split(',')
+		finaldata['vendor'] = ossplit[0]
+		finaldata['version'] = ossplit[2]
 	elif 'bytes of memory' in i:
-		finaldata.append(i)
+		finaldata['model'] = i.split()[1]
 	elif 'uptime is' in i:
-		finaldata.append(i)
+		finaldata.update({ 'uptime' : i })
 	elif 'Processor board ID' in i:
-		finaldata.append(i)
+		finaldata.update({ 'serial' : i })
 
-print(finaldata)
+
+
+pprint.pprint(finaldata)
