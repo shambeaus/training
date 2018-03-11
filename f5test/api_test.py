@@ -1,7 +1,7 @@
 from f5.bigip import ManagementRoot
 import pprint
 # Connect to the BigIP
-mgmt = ManagementRoot("192.168.109.130", "admin", "starcraft")
+mgmt = ManagementRoot("192.168.109.130", "admin", "test")
 
 vip_sslprofile = {}
 cert_key = {}
