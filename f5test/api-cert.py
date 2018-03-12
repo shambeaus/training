@@ -1,7 +1,7 @@
 from f5.bigip import ManagementRoot
 import pprint
 # Connect to the BigIP
-mgmt = ManagementRoot("192.168.109.130", "admin", "pass")
+mgmt = ManagementRoot("192.168.109.130", "admin", "starcraft")
 
 vip_sslprofile = {}
 cert_key = {}
@@ -19,16 +19,12 @@ for line in virtuals:
         if 'clientside' in profile.context:
             vip_sslprofile[line.name].append(profile.name)
 
-
-pprint.pprint(vip_sslprofile)
-
 # Create list of all ssl profiles and the assigned cert/key
 
 clientssl = mgmt.tm.ltm.profile.client_ssls.get_collection()
 
 for line in clientssl:
-    cert_key[line.name] = {}
-    cert_key[line.name] = [line.cert,line.key]
+    cert_key[line.name] = {line.cert: line.key}
 
 # Create list of all certs with expiration date
 
@@ -41,7 +37,7 @@ for line in certinfo:
 
 for k, v in vip_sslprofile.items():
     if v:
-        final_dic[k] = []
+        final_dic[k] = {}
 
 #Compare cert/key with ssl to correlate .crt and .key file
 
@@ -49,7 +45,7 @@ def compare_certvip(dictOne,dictTwo):
     for key in dictOne.items():
         for key2 in dictTwo.items():
             if key[0] in key2[1]:
-                final_dic[key2[0]].append(key)
+                final_dic[key2[0]][key[0]] = key[1]
 
 #Compare cert to get expiration date:
 
@@ -58,17 +54,35 @@ def compare_certvip(dictOne,dictTwo):
 #        for key2 in dictTwo.items():
 #            if key[0] in key2[1]:
 #                print(key[1])
-#                final_dic[key2[1]].append(key)
+#
 
 
+
+
+#pprint.pprint(expiration)
 compare_certvip(cert_key,vip_sslprofile)
 #compare_certexpiration(expiration,cert_key)
 
-
 print('------------------------------------')
 print('------------------------------------')
 
-pprint.pprint(final_dic)
+for k,v in final_dic.items():
+    print('Vitual server name:')
+    pprint.pprint(k)
+    print('Profiles:')
+    pprint.pprint(v)
+    print('------------------------------------')
+    if v.values() in expiration.keys():
+        print('fish')
+
+
+
+#pprint.pprint(expiration)
+
+#for k,v in cert_key.items():
+#    for k1,v1 in expiration.items():
+#        if k1 in v:
+#            pprint.pprint(k1 + ' expiration is ' + v1)
 
 
 
