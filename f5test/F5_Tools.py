@@ -13,20 +13,20 @@ class F5_Tools(object):
 
     def create_new_pool(self, mgmt, part, pool_name, pool_members):
         # Check if there is an existing pool
-        if mgmt.tm.ltm.pools.pool.exists(partition='Common', name=pool_name):
+        if mgmt.tm.ltm.pools.pool.exists(partition=part, name=pool_name):
             print('Pool already exists')
             sys.exit()
-        pool = mgmt.tm.ltm.pools.pool.create(partition='Common', name=pool_name, monitor='tcp')
+        pool = mgmt.tm.ltm.pools.pool.create(partition=part, name=pool_name, monitor='tcp')
         # Verify pool was created
-        if mgmt.tm.ltm.pools.pool.exists(partition='Common', name=pool_name):
+        if mgmt.tm.ltm.pools.pool.exists(partition=part, name=pool_name):
             print('Successfully created pool : ' + pool_name)
         else:
             print('something went wrong')
         # Add members to pool
         print('Adding members to pools')
-        if self.pool_members:
-            for member in self.pool_members:
-                pool_member = pool.members_s.members.create(partition='Common', name=member)
+        if pool_members:
+            for member in pool_members:
+                pool_member = pool.members_s.members.create(partition=part, name=member)
                 print(' Added member ' + member)
         else:
             print('no members provided')

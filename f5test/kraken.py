@@ -7,7 +7,7 @@ mgmt = ManagementRoot("192.168.109.130", "admin", "pass")
 
 
 partition = 'Common'
-pool_name = 'pool-classsfsfdss'
+pool_name = 'pool-dsfasdfsds'
 pool_members = ['192.168.5.5:80', '192.168.12.5:80']
 public_IP = '5.5.4.52'
 nat_IP = '192.168.10.15'
