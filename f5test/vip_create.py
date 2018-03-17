@@ -2,7 +2,7 @@ from f5.bigip import ManagementRoot
 import sys
 import random
 
-mgmt = ManagementRoot("192.168.109.130", "admin", "pass")
+
 
 
 partition = 'Common'

@@ -3,14 +3,6 @@ import sys
 
 class F5_Tools(object):
 
-    def __init__(object):
-        part = ''
-        pool_name = ''
-        pool_members = ''
-        vip_name = ''
-        destination_IP = ''
-
-
     def create_new_pool(self, mgmt, part, pool_name, pool_members):
         # Check if there is an existing pool
         if mgmt.tm.ltm.pools.pool.exists(partition=part, name=pool_name):
@@ -33,15 +25,31 @@ class F5_Tools(object):
             sys.exit()
 
 
-
-    def create_new_vip(self, partition, vip_name, destination_IP, pool_name):
-        if mgmt.tm.ltm.virtuals.virtual.exists(partition=partition, name=vip_name):
+    def create_new_vip(self, mgmt, virtuals_data, part, vip_name, destination_IP, pool_name):
+        if mgmt.tm.ltm.virtuals.virtual.exists(partition=part, name=vip_name):
             print('Virtual already exists')
-            sys.exit()
-        virtual = mgmt.tm.ltm.virtuals.virtual.create(partition=partition, name=vip_name, ipProtocol='tcp', pool='pool-third', destination=destination_IP)
-        if mgmt.tm.ltm.virtuals.virtual.exists(partition=partition, name=vip_name):
+            sys.exit()        
+        else:
+            virtual = mgmt.tm.ltm.virtuals.virtual.create(partition=part, name=vip_name, ipProtocol='tcp', pool=pool_name, destination=destination_IP)
+        if mgmt.tm.ltm.virtuals.virtual.exists(partition=part, name=vip_name):
             print('Successfully created VIP : ' + vip_name)
         else:
             print('something went wrong')
 
+    def qc_vip(self, virtuals_data, pools_data, vip_name, destination_IP, pool_name):
+        for line in virtuals_data:
+            if vip_name in line.name:
+                print('VIP ' + vip_name + ' already exists')
+                sys.exit()
+            elif destination_IP in line.destination:
+                print('Destination IP ' + destination_IP + ' already in use.')
+                sys.exit()
+        for line in pools_data:
+            if pool_name in line.name:
+                print('Pool ' + pool_name + ' already in use')
+                sys.exit()
 
+
+
+#    def update_pool_members(self, mgmt, pool_name, pool_members):
+        
