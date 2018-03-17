@@ -37,7 +37,7 @@ for i in uptime_fields:
                                          (' minute', MINUTE_SECONDS)):
         if string_match in i:
             (time, na) = i.split(string_match)
-            uptimeseconds += int(time) * time_factor
+            uptimeseconds += int(time * time_factor
             print(uptimeseconds)
 
 #    if 'year' in i:
